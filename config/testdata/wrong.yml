@@ -1,4 +1,6 @@
-core:
+# wrong format
+#core:
+  core:
   enabled: true # enabale httpd server
   address: "" # ip address to bind (default: any)
   port: "8088" # ignore this port number if auto_tls is enabled (listen 443).
@@ -10,6 +12,8 @@ core:
   ssl: false
   cert_path: "cert.pem"
   key_path: "key.pem"
+  cert_base64: ""
+  key_base64: ""
   http_proxy: "" # only working for FCM server
   pid:
     enabled: false
@@ -41,6 +45,8 @@ android:
 ios:
   enabled: false
   key_path: "key.pem"
+  key_base64: "" # load iOS key from base64 input
+  key_type: "pem" # could be pem, p12 or p8 type
   password: "" # certificate password, default as empty string.
   production: false
   max_retry: 0 # resend fail notification, default value zero is disabled

@@ -29,7 +29,7 @@ func (suite *ConfigTestSuite) SetupTest() {
 	if err != nil {
 		panic("failed to load default config.yml")
 	}
-	suite.ConfGorush, err = LoadConf("config.yml")
+	suite.ConfGorush, err = LoadConf("testdata/config.yml")
 	if err != nil {
 		panic("failed to load config.yml from file")
 	}
@@ -47,6 +47,8 @@ func (suite *ConfigTestSuite) TestValidateConfDefault() {
 	assert.Equal(suite.T(), false, suite.ConfGorushDefault.Core.SSL)
 	assert.Equal(suite.T(), "cert.pem", suite.ConfGorushDefault.Core.CertPath)
 	assert.Equal(suite.T(), "key.pem", suite.ConfGorushDefault.Core.KeyPath)
+	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Core.KeyBase64)
+	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Core.CertBase64)
 	assert.Equal(suite.T(), int64(100), suite.ConfGorushDefault.Core.MaxNotification)
 	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Core.HTTPProxy)
 	// Pid
@@ -73,7 +75,9 @@ func (suite *ConfigTestSuite) TestValidateConfDefault() {
 
 	// iOS
 	assert.Equal(suite.T(), false, suite.ConfGorushDefault.Ios.Enabled)
-	assert.Equal(suite.T(), "key.pem", suite.ConfGorushDefault.Ios.KeyPath)
+	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Ios.KeyPath)
+	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Ios.KeyBase64)
+	assert.Equal(suite.T(), "pem", suite.ConfGorushDefault.Ios.KeyType)
 	assert.Equal(suite.T(), "", suite.ConfGorushDefault.Ios.Password)
 	assert.Equal(suite.T(), false, suite.ConfGorushDefault.Ios.Production)
 	assert.Equal(suite.T(), 0, suite.ConfGorushDefault.Ios.MaxRetry)
@@ -115,6 +119,8 @@ func (suite *ConfigTestSuite) TestValidateConf() {
 	assert.Equal(suite.T(), false, suite.ConfGorush.Core.SSL)
 	assert.Equal(suite.T(), "cert.pem", suite.ConfGorush.Core.CertPath)
 	assert.Equal(suite.T(), "key.pem", suite.ConfGorush.Core.KeyPath)
+	assert.Equal(suite.T(), "", suite.ConfGorush.Core.CertBase64)
+	assert.Equal(suite.T(), "", suite.ConfGorush.Core.KeyBase64)
 	assert.Equal(suite.T(), int64(100), suite.ConfGorush.Core.MaxNotification)
 	assert.Equal(suite.T(), "", suite.ConfGorush.Core.HTTPProxy)
 	// Pid
@@ -142,6 +148,8 @@ func (suite *ConfigTestSuite) TestValidateConf() {
 	// iOS
 	assert.Equal(suite.T(), false, suite.ConfGorush.Ios.Enabled)
 	assert.Equal(suite.T(), "key.pem", suite.ConfGorush.Ios.KeyPath)
+	assert.Equal(suite.T(), "", suite.ConfGorush.Ios.KeyBase64)
+	assert.Equal(suite.T(), "pem", suite.ConfGorush.Ios.KeyType)
 	assert.Equal(suite.T(), "", suite.ConfGorush.Ios.Password)
 	assert.Equal(suite.T(), false, suite.ConfGorush.Ios.Production)
 	assert.Equal(suite.T(), 0, suite.ConfGorush.Ios.MaxRetry)
@@ -183,7 +191,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	os.Setenv("GORUSH_IOS_KEY_ID", "ABC123DEFG")
 	os.Setenv("GORUSH_IOS_TEAM_ID", "DEF123GHIJ")
 	os.Setenv("GORUSH_API_HEALTH_URI", "/healthz")
-	ConfGorush, err := LoadConf("config.yml")
+	ConfGorush, err := LoadConf("testdata/config.yml")
 	if err != nil {
 		panic("failed to load config.yml from file")
 	}
@@ -193,4 +201,15 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	assert.Equal(t, "ABC123DEFG", ConfGorush.Ios.KeyID)
 	assert.Equal(t, "DEF123GHIJ", ConfGorush.Ios.TeamID)
 	assert.Equal(t, "/healthz", ConfGorush.API.HealthURI)
+}
+
+func TestLoadWrongYAMLConfig(t *testing.T) {
+	_, err := LoadConf("testdata/wrong.yml")
+	assert.Error(t, err)
+}
+
+func TestLoadWrongDefaultYAMLConfig(t *testing.T) {
+	defaultConf = []byte(`a`)
+	_, err := LoadConf("")
+	assert.Error(t, err)
 }

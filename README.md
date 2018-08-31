@@ -4,6 +4,7 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
 
 [![GoDoc](https://godoc.org/github.com/appleboy/gorush?status.svg)](https://godoc.org/github.com/appleboy/gorush)
 [![Build Status](http://drone.wu-boy.com/api/badges/appleboy/gorush/status.svg)](http://drone.wu-boy.com/appleboy/gorush)
+[![Build status](https://ci.appveyor.com/api/projects/status/ka4hvplssp1q2s5u?svg=true)](https://ci.appveyor.com/project/appleboy/gorush-fp5dh)
 [![codecov](https://codecov.io/gh/appleboy/gorush/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/gorush)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/gorush)](https://goreportcard.com/report/github.com/appleboy/gorush)
 [![codebeat badge](https://codebeat.co/badges/0a4eff2d-c9ac-46ed-8fd7-b59942983390)](https://codebeat.co/projects/github-com-appleboy-gorush)
@@ -40,6 +41,8 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
 - [Run gorush in AWS Lambda](#run-gorush-in-aws-lambda)
 - [License](#license)
 
+<a href="https://www.buymeacoffee.com/appleboy" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+
 ## Support Platform
 
 * [APNS](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html)
@@ -57,7 +60,7 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
 * Support notification queue and multiple workers.
 * Support `/api/stat/app` show notification success and failure counts.
 * Support `/api/config` show your [YAML](https://en.wikipedia.org/wiki/YAML) config.
-* Support store app stat to memory, [Redis](http://redis.io/), [BoltDB](https://github.com/boltdb/bolt), [BuntDB](https://github.com/tidwall/buntdb) or [LevelDB](https://github.com/syndtr/goleveldb).
+* Support store app stat to memory, [Redis](http://redis.io/), [BoltDB](https://github.com/boltdb/bolt), [BuntDB](https://github.com/tidwall/buntdb), [LevelDB](https://github.com/syndtr/goleveldb) or [BadgerDB](https://github.com/dgraph-io/badger).
 * Support `p8`, `p12` or `pem` format of iOS certificate file.
 * Support `/sys/stats` show response time, status code count, etc.
 * Support for HTTP proxy to Google server (FCM).
@@ -69,7 +72,7 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
 
 See the default [YAML config example](config/config.yml):
 
-[embedmd]:# (config/config.yml yaml)
+[embedmd]:# (config/testdata/config.yml yaml)
 ```yaml
 core:
   enabled: true # enabale httpd server
@@ -83,6 +86,8 @@ core:
   ssl: false
   cert_path: "cert.pem"
   key_path: "key.pem"
+  cert_base64: ""
+  key_base64: ""
   http_proxy: "" # only working for FCM server
   pid:
     enabled: false
@@ -114,6 +119,8 @@ android:
 ios:
   enabled: false
   key_path: "key.pem"
+  key_base64: "" # load iOS key from base64 input
+  key_type: "pem" # could be pem, p12 or p8 type
   password: "" # certificate password, default as empty string.
   production: false
   max_retry: 0 # resend fail notification, default value zero is disabled
@@ -185,6 +192,12 @@ On Windows
 
 ```sh
 $ wget https://github.com/appleboy/gorush/releases/download/1.10.0/gorush-1.10.0-windows-amd64.exe -O gorush.exe
+```
+
+On macOS, use Homebrew.
+
+```
+$ brew install --HEAD https://github.com/appleboy/gorush/raw/master/HomebrewFormula/gorush.rb
 ```
 
 ### Command Usage
@@ -456,7 +469,7 @@ Request body must has a notifications array. The following is a parameter table 
 | title                   | string       | notification title                                                                                | -        |                                                               |
 | priority                | string       | Sets the priority of the message.                                                                 | -        | `normal` or `high`                                            |
 | content_available       | bool         | data messages wake the app by default.                                                            | -        |                                                               |
-| sound                   | string       | sound type                                                                                        | -        |                                                               |
+| sound                   | interface{}  | sound type                                                                                        | -        |                                                               |
 | data                    | string array | extensible partition                                                                              | -        |                                                               |
 | retry                   | int          | retry send notification if fail response from server. Value must be small than `max_retry` field. | -        |                                                               |
 | topic                   | string       | send messages to topics                                                                           |          |                                                               |
@@ -474,6 +487,9 @@ Request body must has a notifications array. The following is a parameter table 
 | category                | string       | the UIMutableUserNotificationCategory object                                                      | -        | only iOS                                                      |
 | alert                   | string array | payload of a iOS message                                                                          | -        | only iOS. See the [detail](#ios-alert-payload)                |
 | mutable_content         | bool         | enable Notification Service app extension.                                                        | -        | only iOS(10.0+).                                              |
+| name                    | string       | sets the name value on the aps sound dictionary.                                                  | -        | only iOS                                                      |
+| volume                  | float32      | sets the volume value on the aps sound dictionary.                                                | -        | only iOS                                                      |
+
 ### iOS alert payload
 
 | name           | type             | description                                                                                      | required | note |
@@ -490,6 +506,26 @@ Request body must has a notifications array. The following is a parameter table 
 | title-loc-key  | string           | The key to a title string in the Localizable.strings file for the current localization.          | -        |      |
 
 See more detail about [APNs Remote Notification Payload](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/PayloadKeyReference.html).
+
+### iOS sound payload
+
+| name           | type             | description                                                                                      | required | note |
+|----------------|------------------|--------------------------------------------------------------------------------------------------|----------|------|
+| name           | string           | sets the name value on the aps sound dictionary.                                                 | -        |      |
+| volume         | float32          | sets the volume value on the aps sound dictionary.                                               | -        |      |
+| critical       | int              | sets the critical value on the aps sound dictionary.                                             | -        |      |
+
+request format:
+
+```json
+{
+  "sound": {
+    "critical": 1,
+    "name": "default",
+    "volume": 2.0
+  }
+}
+```
 
 ### Android notification payload
 
@@ -551,7 +587,11 @@ The following payload specifies that the device should display an alert message,
       "platform": 1,
       "message": "You got your emails.",
       "badge": 9,
-      "sound": "bingbong.aiff"
+      "sound": {
+        "critical": 1,
+        "name": "default",
+        "volume": 1.0
+      }
     }
   ]
 }
@@ -591,8 +631,7 @@ Support send notification from different environment. See the detail of [issue](
       "platform": 1,
 +     "development": true,
       "message": "Hello World iOS Sandbox!"
-    },
-    .....
+    }
   ]
 }
 ```
@@ -908,7 +947,7 @@ $ http -v --verify=no --json GET http://your.docker.host/api/stat/go
 
 ### Quick Start
 
-Create name space as `gorush` and configuration map:
+Create namespace as `gorush` as `gorush` and then your configuration map:
 
 ```sh
 $ kubectl create -f k8s/gorush-namespace.yaml

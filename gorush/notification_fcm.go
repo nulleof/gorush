@@ -36,6 +36,7 @@ func GetAndroidNotification(req PushNotification) *fcm.Message {
 		Condition:             req.Condition,
 		CollapseKey:           req.CollapseKey,
 		ContentAvailable:      req.ContentAvailable,
+		MutableContent:        req.MutableContent,
 		DelayWhileIdle:        req.DelayWhileIdle,
 		TimeToLive:            req.TimeToLive,
 		RestrictedPackageName: req.RestrictedPackageName,
@@ -71,9 +72,9 @@ func GetAndroidNotification(req PushNotification) *fcm.Message {
 		notification.Data["title"] = req.Title
 	}
 
-	if len(req.Sound) > 0 {
-		notification.Notification.Sound = req.Sound
-		notification.Data["sound"] = req.Sound
+	if v, ok := req.Sound.(string); ok && len(v) > 0 {
+		notification.Notification.Sound = v
+		notification.Data["sound"] = v
 	}
 
 	return notification

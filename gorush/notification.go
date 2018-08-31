@@ -50,15 +50,16 @@ type RequestPush struct {
 // PushNotification is single notification request
 type PushNotification struct {
 	// Common
-	Tokens           []string `json:"tokens" binding:"required"`
-	Platform         int      `json:"platform" binding:"required"`
-	Message          string   `json:"message,omitempty"`
-	Title            string   `json:"title,omitempty"`
-	Priority         string   `json:"priority,omitempty"`
-	ContentAvailable bool     `json:"content_available,omitempty"`
-	Sound            string   `json:"sound,omitempty"`
-	Data             D        `json:"data,omitempty"`
-	Retry            int      `json:"retry,omitempty"`
+	Tokens           []string    `json:"tokens" binding:"required"`
+	Platform         int         `json:"platform" binding:"required"`
+	Message          string      `json:"message,omitempty"`
+	Title            string      `json:"title,omitempty"`
+	Priority         string      `json:"priority,omitempty"`
+	ContentAvailable bool        `json:"content_available,omitempty"`
+	MutableContent   bool        `json:"mutable_content,omitempty"`
+	Sound            interface{} `json:"sound,omitempty"`
+	Data             D           `json:"data,omitempty"`
+	Retry            int         `json:"retry,omitempty"`
 	wg               *sync.WaitGroup
 	log              *[]LogPushEntry
 
@@ -74,18 +75,19 @@ type PushNotification struct {
 	Notification          fcm.Notification `json:"notification,omitempty"`
 
 	// iOS
-	Expiration     int64    `json:"expiration,omitempty"`
-	ApnsID         string   `json:"apns_id,omitempty"`
-	CollapseID     string   `json:"collapse_id,omitempty"`
-	Topic          string   `json:"topic,omitempty"`
-	Badge          *int     `json:"badge,omitempty"`
-	Category       string   `json:"category,omitempty"`
-	ThreadID       string   `json:"thread-id,omitempty"`
-	URLArgs        []string `json:"url-args,omitempty"`
-	Alert          Alert    `json:"alert,omitempty"`
-	MutableContent bool     `json:"mutable-content,omitempty"`
-	Production     bool     `json:"production,omitempty"`
-	Development    bool     `json:"development,omitempty"`
+	Expiration  int64    `json:"expiration,omitempty"`
+	ApnsID      string   `json:"apns_id,omitempty"`
+	CollapseID  string   `json:"collapse_id,omitempty"`
+	Topic       string   `json:"topic,omitempty"`
+	Badge       *int     `json:"badge,omitempty"`
+	Category    string   `json:"category,omitempty"`
+	ThreadID    string   `json:"thread-id,omitempty"`
+	URLArgs     []string `json:"url-args,omitempty"`
+	Alert       Alert    `json:"alert,omitempty"`
+	Production  bool     `json:"production,omitempty"`
+	Development bool     `json:"development,omitempty"`
+	SoundName   string   `json:"name,omitempty"`
+	SoundVolume float32  `json:"volume,omitempty"`
 }
 
 // WaitDone decrements the WaitGroup counter.
@@ -172,13 +174,15 @@ func CheckPushConf() error {
 	}
 
 	if PushConf.Ios.Enabled {
-		if PushConf.Ios.KeyPath == "" {
-			return errors.New("Missing iOS certificate path")
+		if PushConf.Ios.KeyPath == "" && PushConf.Ios.KeyBase64 == "" {
+			return errors.New("Missing iOS certificate key")
 		}
 
 		// check certificate file exist
-		if _, err := os.Stat(PushConf.Ios.KeyPath); os.IsNotExist(err) {
-			return errors.New("certificate file does not exist")
+		if PushConf.Ios.KeyPath != "" {
+			if _, err := os.Stat(PushConf.Ios.KeyPath); os.IsNotExist(err) {
+				return errors.New("certificate file does not exist")
+			}
 		}
 	}
 
