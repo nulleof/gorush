@@ -52,16 +52,14 @@ func GetAndroidNotification(req PushNotification) *fcm.Message {
 	}
 
 	// Add another field
-	notification.Data = make(D)
+	notification.Data = make(map[string]interface{})
 	if len(req.Data) > 0 {
 		for k, v := range req.Data {
 			notification.Data[k] = v
 		}
 	}
 
-	// notification.Data = &req.Data;
-
-	// notification.Notification = &req.Notification
+	notification.Notification = &req.Notification
 
 	// Set request message if body is empty
 	if len(req.Message) > 0 {
