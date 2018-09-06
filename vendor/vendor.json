@@ -854,7 +854,7 @@
 		},
 		{
 			"checksumSHA1": "mfhIuSne6nmZ2FhQRBp+TboDxTo=",
-			"path": "gopkg.in/nulleof/gofight.v2",
+			"path": "gopkg.in/appleboy/gofight.v2",
 			"revision": "beadc315fb676177c07a89c34159b9ca4e1aafd9",
 			"revisionTime": "2016-11-16T08:12:57Z"
 		},

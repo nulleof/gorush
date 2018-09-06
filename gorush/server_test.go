@@ -11,7 +11,7 @@ import (
 	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/nulleof/gofight.v2"
+	"gopkg.in/appleboy/gofight.v2"
 )
 
 var goVersion = runtime.Version()
