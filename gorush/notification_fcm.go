@@ -51,7 +51,7 @@ func GetAndroidNotification(req PushNotification) *fcm.Message {
 		notification.Priority = "high"
 	}
 
-	Add another field
+	// Add another field
 	notification.Data = make(D)
 	if len(req.Data) > 0 {
 		for k, v := range req.Data {
