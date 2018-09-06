@@ -2,7 +2,7 @@ version: '{build}'
 image: 'Visual Studio 2017'
 platform: x64
 
-clone_folder: 'c:\go\src\github.com\appleboy\gorush'
+clone_folder: 'c:\go\src\github.com\nulleof\gorush'
 max_jobs: 1
 
 environment:
@@ -31,11 +31,11 @@ build_script:
       }
       dir
       docker pull microsoft/nanoserver:10.0.14393.1884
-      docker build -f Dockerfile.windows -t appleboy/gorush:windows-amd64 .
+      docker build -f Dockerfile.windows -t nulleof/gorush:windows-amd64 .
 
 test_script:
   - ps: |
-      docker run --rm appleboy/gorush:windows-amd64 --version
+      docker run --rm nulleof/gorush:windows-amd64 --version
 
 deploy_script:
   - ps: |
@@ -46,16 +46,16 @@ deploy_script:
         echo $env:DOCKER_PASSWORD | docker login --username $env:DOCKER_USERNAME --password-stdin
         if ( $env:APPVEYOR_REPO_TAG -eq 'true' ) {
           $major,$minor,$patch = $env:APPVEYOR_REPO_TAG_NAME.split('.')
-          docker push appleboy/gorush:windows-amd64
-          docker tag appleboy/gorush:windows-amd64 appleboy/gorush:$major.$minor.$patch-windows-amd64
-          docker push appleboy/gorush:$major.$minor.$patch-windows-amd64
-          docker tag appleboy/gorush:windows-amd64 appleboy/gorush:$major.$minor-windows-amd64
-          docker push appleboy/gorush:$major.$minor-windows-amd64
-          docker tag appleboy/gorush:windows-amd64 appleboy/gorush:$major-windows-amd64
-          docker push appleboy/gorush:$major-windows-amd64
+          docker push nulleof/gorush:windows-amd64
+          docker tag nulleof/gorush:windows-amd64 nulleof/gorush:$major.$minor.$patch-windows-amd64
+          docker push nulleof/gorush:$major.$minor.$patch-windows-amd64
+          docker tag nulleof/gorush:windows-amd64 nulleof/gorush:$major.$minor-windows-amd64
+          docker push nulleof/gorush:$major.$minor-windows-amd64
+          docker tag nulleof/gorush:windows-amd64 nulleof/gorush:$major-windows-amd64
+          docker push nulleof/gorush:$major-windows-amd64
         } else {
           if ( $env:APPVEYOR_REPO_BRANCH -eq 'master' ) {
-            docker push appleboy/gorush:windows-amd64
+            docker push nulleof/gorush:windows-amd64
           }
         }
       }

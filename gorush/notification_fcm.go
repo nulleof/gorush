@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/appleboy/go-fcm"
+	"github.com/nulleof/go-fcm"
 )
 
 // InitFCMClient use for initialize FCM Client.
