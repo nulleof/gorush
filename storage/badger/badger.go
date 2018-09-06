@@ -9,7 +9,7 @@ import (
 	"github.com/nulleof/gorush/config"
 	"github.com/nulleof/gorush/storage"
 
-	"github.com/nulleof/com/convert"
+	"github.com/appleboy/com/convert"
 	"github.com/dgraph-io/badger"
 )
 

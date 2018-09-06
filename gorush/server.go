@@ -10,7 +10,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/crypto/acme/autocert"
-	api "gopkg.in/nulleof/gin-status-api.v1"
+	api "gopkg.in/appleboy/gin-status-api.v1"
 )
 
 func init() {

@@ -50,7 +50,7 @@ A push notification micro server using [Gin](https://github.com/gin-gonic/gin) f
 
 ## Features
 
-* Support [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) using [go-fcm](https://github.com/nulleof/go-fcm) library for Android.
+* Support [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) using [go-fcm](https://github.com/appleboy/go-fcm) library for Android.
 * Support [HTTP/2](https://http2.github.io/) Apple Push Notification Service using [apns2](https://github.com/sideshow/apns2) library.
 * Support [YAML](https://github.com/go-yaml/yaml) configuration.
 * Support command line to send single Android or iOS notification.
@@ -734,7 +734,7 @@ core:
   worker_num: 0 # default worker number is runtime.NumCPU()
   queue_num: 0 # default queue number is 8192
   max_notification: 100
-- sync: false 
+- sync: false
 + sync: true
 ```
 
@@ -829,7 +829,7 @@ func main() {
 }
 ```
 
-See the Node.js example and see more detail frome [README](rpc/example/node/README.md): 
+See the Node.js example and see more detail frome [README](rpc/example/node/README.md):
 
 [embedmd]:# (rpc/example/node/client.js js)
 ```js

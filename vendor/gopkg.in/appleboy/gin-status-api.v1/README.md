@@ -9,13 +9,13 @@ Golang cpu, memory, gc, etc information api handler written in Go (Golang) for [
 Downladn this package.
 
 ```bash
-$ go get gopkg.in/nulleof/gin-status-api.v1
+$ go get gopkg.in/appleboy/gin-status-api.v1
 ```
 
 To import this package, add the following line to your code:
 
 ```go
-import "gopkg.in/nulleof/gin-status-api.v1"
+import "gopkg.in/appleboy/gin-status-api.v1"
 ```
 
 ## Example

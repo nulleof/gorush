@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nulleof/go-fcm"
+	"github.com/appleboy/go-fcm"
 )
 
 // D provide string array

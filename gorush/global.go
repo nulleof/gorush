@@ -4,7 +4,7 @@ import (
 	"github.com/nulleof/gorush/config"
 	"github.com/nulleof/gorush/storage"
 
-	"github.com/nulleof/go-fcm"
+	"github.com/appleboy/go-fcm"
 	"github.com/sideshow/apns2"
 	"github.com/sirupsen/logrus"
 )

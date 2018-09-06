@@ -1,8 +1,8 @@
 # go-fcm
 
-[![GoDoc](https://godoc.org/github.com/nulleof/go-fcm?status.svg)](https://godoc.org/github.com/nulleof/go-fcm)
-[![Build Status](https://travis-ci.org/nulleof/go-fcm.svg?branch=master)](https://travis-ci.org/nulleof/go-fcm)
-[![Go Report Card](https://goreportcard.com/badge/github.com/nulleof/go-fcm)](https://goreportcard.com/report/github.com/nulleof/go-fcmm)
+[![GoDoc](https://godoc.org/github.com/appleboy/go-fcm?status.svg)](https://godoc.org/github.com/appleboy/go-fcm)
+[![Build Status](https://travis-ci.org/nulleof/go-fcm.svg?branch=master)](https://travis-ci.org/appleboy/go-fcm)
+[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/go-fcm)](https://goreportcard.com/report/github.com/appleboy/go-fcmm)
 
 This project was forked from [github.com/edganiukov/fcm](https://github.com/edganiukov/fcm).
 
@@ -21,13 +21,13 @@ More information on [Firebase Cloud Messaging](https://firebase.google.com/docs/
 To install fcm, use `go get`:
 
 ```bash
-go get github.com/nulleof/go-fcm
+go get github.com/appleboy/go-fcm
 ```
 
 or `govendor`:
 
 ```bash
-govendor fetch github.com/nulleof/go-fcm
+govendor fetch github.com/appleboy/go-fcm
 ```
 
 or other tool for vendoring.
@@ -42,7 +42,7 @@ package main
 import (
 	"log"
 
-	"github.com/nulleof/go-fcm"
+	"github.com/appleboy/go-fcm"
 )
 
 func main() {
